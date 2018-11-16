@@ -55,20 +55,20 @@ def valid_hour(s):
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument('-d', '--departure', help='Departure city', required=True)
-argparser.add_argument('-a', '--arrival', help='Destination', required=True)
-argparser.add_argument('-t', '--date', required=True, type=valid_date)
-argparser.add_argument('-h1', '--after', type=valid_hour)
-argparser.add_argument('-h2', '--before', type=valid_hour)
+argparser.add_argument('-a', '--arrival', help='Destination city', required=True)
+argparser.add_argument('-t', '--date', required=True, help='Date of departure. Format: dd-mm-yyyy', type=valid_date)
+argparser.add_argument('-h1', '--min', help='minimim hour of departure.', type=valid_hour)
+argparser.add_argument('-h2', '--max', help='maximum hour of departure.', type=valid_hour)
 
 args = argparser.parse_args()
 
-if args.after is None:
-  args.after = 0;
-if args.before is None:
-  args.before = 24;
+if args.min is None:
+  args.min = 0;
+if args.max is None:
+  args.max = 24;
 
 
-print "Recherche billet: %s => %s on %d %s entre %dh et %dh" %(args.departure, args.arrival, args.date.day, MONTH[args.date.month], args.after, args.before)
+print "Recherche billet: %s => %s on %d %s entre %dh et %dh" %(args.departure, args.arrival, args.date.day, MONTH[args.date.month], args.min, args.max)
 
 #init webdriver
 options = selenium.webdriver.chrome.options.Options()
@@ -94,9 +94,9 @@ month_str = "%s %s" % (MONTH[args.date.month] , args.date.year)
 select.select_by_visible_text(month_str)
 #hour
 select = Select(driver.find_element_by_name('L_h_deb_r'))
-select.select_by_visible_text('%sh' % str(args.after).zfill(2))
+select.select_by_visible_text('%sh' % str(args.min).zfill(2))
 select = Select(driver.find_element_by_name('L_h_fin_r'))
-select.select_by_visible_text('%sh' % str(args.before).zfill(2))
+select.select_by_visible_text('%sh' % str(args.max).zfill(2))
 
 #search it !
 driver.find_element_by_name('choix_rech_billet').click()
