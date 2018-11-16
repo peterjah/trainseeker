@@ -30,7 +30,7 @@ MONTH = {
     9: "septembre",
     10: "octobre",
     11: "novembre",
-    12: "decembre",
+    12: "décembre",
 }
 
 def valid_date(s):
@@ -88,6 +88,10 @@ arrival_elt.send_keys(args.arrival)
 #day
 select = Select(driver.find_element_by_name('L_jour_dep'))
 select.select_by_visible_text(str(args.date.day).zfill(2))
+#month
+select = Select(driver.find_element_by_name('L_mois_annee_dep'))
+month_str = "%s %s" % (MONTH[args.date.month] , args.date.year)
+select.select_by_visible_text(month_str)
 #hour
 select = Select(driver.find_element_by_name('L_h_deb_r'))
 select.select_by_visible_text('%sh' % str(args.after).zfill(2))
