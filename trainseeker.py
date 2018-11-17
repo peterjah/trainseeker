@@ -3,7 +3,7 @@
 
 import argparse
 import datetime
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import re
 import selenium.webdriver
@@ -36,21 +36,21 @@ MONTH = {
 def valid_date(s):
     try:
       date = datetime.strptime(s, "%d-%m-%Y")
-      if date < datetime.today():
-        msg = "Incorrect date %s" % args.date.strftime("%d/%m/%y")
-        raise argparse.ArgumentTypeError(msg)
+      if date < datetime.today() - timedelta(days=1):
+        msg = "%s is in the past!" % date.strftime("%d/%m/%y")
+        argparser.error(msg)
       return date
     except ValueError:
-      msg = "Not a valid date: '{0}'. Format: dd-mm-yyyy".format(s)
-      raise argparse.ArgumentTypeError(msg)
+      msg = "Not a valid date: '{0}'. Format: dd-mm-yyyy.".format(s)
+      argparser.error(msg)
 
 def valid_hour(s):
     hour = int(s)
     if hour >= 0 and hour <= 24:
       return hour
     else:
-      msg = "Not a valid hour: '%s'." % s
-      raise argparse.ArgumentTypeError(msg)
+      msg = "Not a valid hour: '%s'. Valid hours: 0 to 24." % s
+      argparser.error(msg)
 
 
 argparser = argparse.ArgumentParser()
@@ -100,7 +100,6 @@ select.select_by_visible_text('%sh' % str(args.max).zfill(2))
 
 #search it !
 driver.find_element_by_name('choix_rech_billet').click()
-time.sleep(1)
 
 #wait for results
 msg_xpath = "//div[@id='msg_rech_billets']//span"
