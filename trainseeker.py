@@ -18,20 +18,10 @@ CONF = {
     "url": "http://www.trocdestrains.com/recherche-billet-train.html",
 }
 
-MONTH = {
-    1: "janvier",
-    2: "février",
-    3: "mars",
-    4: "avril",
-    5: "mai",
-    6: "juin",
-    7: "juillet",
-    8: "août",
-    9: "septembre",
-    10: "octobre",
-    11: "novembre",
-    12: "décembre",
-}
+month = ["janvier", "février", "mars", "avril", "mai", "juin",
+         "juillet", "août", "septembre", "octobre", "novembre", "décembre" ]
+
+week = [ 'lundi', 'mar', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
 
 def valid_date(s):
     try:
@@ -68,7 +58,7 @@ if args.max is None:
   args.max = 24;
 
 
-print "Recherche billet: %s => %s on %d %s entre %dh et %dh" %(args.departure, args.arrival, args.date.day, MONTH[args.date.month], args.min, args.max)
+print "Recherche billet: %s => %s le %s %d %s entre %dh et %dh" %(args.departure, args.arrival,  week[args.date.weekday()], args.date.day, month[args.date.month - 1], args.min, args.max)
 
 #init webdriver
 options = selenium.webdriver.chrome.options.Options()
@@ -90,7 +80,7 @@ select = Select(driver.find_element_by_name('L_jour_dep'))
 select.select_by_visible_text(str(args.date.day).zfill(2))
 #month
 select = Select(driver.find_element_by_name('L_mois_annee_dep'))
-month_str = "%s %s" % (MONTH[args.date.month] , args.date.year)
+month_str = "%s %s" % (month[args.date.month - 1] , args.date.year)
 select.select_by_visible_text(month_str)
 #hour
 select = Select(driver.find_element_by_name('L_h_deb_r'))
